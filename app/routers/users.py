@@ -1,10 +1,10 @@
 from fastapi import APIRouter
 
-router = APIRouter(prefix="/users", tags=["Users"])  # Обязательно должно быть "router"
+router = APIRouter()  # Обязательно должно быть "router"
 
-@router.get("/")
-def get_users():
-    return {"message": "All users"}
+@router.get("/{peremennaya}")
+def get_users(peremennaya):
+    return {"message": f"All users {peremennaya}"}
 
 @router.post("/")
 def create_user():
