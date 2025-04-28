@@ -1,0 +1,29 @@
+ body {
+    background-color: #121212;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    background-color: #181818;
+    padding: 15px;
+    display: flex;
+    gap: 20px;
+}
+
+.navbar a {
+    color: #b3b3b3;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.navbar a:hover {
+    color: #1db954;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 50px;
+}
