@@ -2,14 +2,20 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from app.routers import users, root
 from app.utils import STATIC_DIR
+from dotenv import load_dotenv
+import os
 
+load_dotenv()  # Загружаем переменные
+
+print("DB_USER:", os.getenv('DB_USER'))
+print("DB_NAME:", os.getenv('DB_NAME'))
 app = FastAPI()
 
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
-app.include_router(users.router, prefix="/users", tags=["Users"])
+app.include_router(users.router, tags=["Users"])
 app.include_router(root.router, tags=["Root"])
 
 

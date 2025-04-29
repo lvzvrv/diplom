@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music Reviews - Лучшие альбомы</title>
+    <title>Мой профиль</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <!-- Навигационная панель -->
+    <!-- Навигационная панель (та же, что в index.html) -->
     <nav class="navbar">
         <a href="/" class="logo">MusicReviews</a>
         <div class="nav-links">
@@ -22,23 +22,17 @@
         </div>
     </nav>
 
-    <!-- Основное содержимое -->
-    <div class="container">
-        <h1>Лучшие альбомы</h1>
+    <!-- Содержимое профиля -->
+    <div class="profile-container">
+        <h1>Мой профиль</h1>
 
-        <div class="albums-grid">
-            {% for album in albums %}
-            <div class="album-card">
-                <img src="{{ album.cover_url or 'https://via.placeholder.com/300' }}"
-                     alt="{{ album.album_title }}"
-                     class="album-cover">
-                <h3 class="album-title">{{ album.album_title }}</h3>
-                <p class="album-artist">{{ album.artist_name }}</p>
-                <p class="album-date">Дата выхода: {{ album.release_date.strftime('%d.%m.%Y') }}</p>
-                <span class="album-genre">{{ album.genre or 'Разное' }}</span>
-            </div>
-            {% endfor %}
+        <div class="profile-info">
+            <p><strong>Имя пользователя:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Дата регистрации:</strong> {{ user.created_at.strftime('%d.%m.%Y') }}</p>
         </div>
+
+        <a href="/logout" class="logout-button">Выйти</a>
     </div>
 </body>
 </html>

@@ -1,0 +1,72 @@
+[
+    {
+        "album_title": "D&P à vie",
+        "artist_name": "Jul",
+        "release_date": "2025-04-25",
+        "cover_url": "https://cdn-images.dzcdn.net/images/cover/6db644d0b5c7801332ee580df98b931b/250x250-000000-80-0-0.jpg",
+        "genre": "Rap/Hip Hop"
+    },
+    {
+        "album_title": "Regional At Best",
+        "artist_name": "Twenty One Pilots",
+        "release_date": "2011-07-08",
+        "cover_url": "https://cdn-images.dzcdn.net/images/cover/e276d1f527dc726a47cb10a87cf90742/250x250-000000-80-0-0.jpg",
+        "genre": "Pop"
+    },
+    {
+        "album_title": "Black Samson, the Bastard Swordsman",
+        "artist_name": "Wu-Tang Clan",
+        "release_date": "2025-04-25",
+        "cover_url": "https://cdn-images.dzcdn.net/images/cover/21ad4b1662669b11d91fbacbadafca00/250x250-000000-80-0-0.jpg",
+        "genre": "Rap/Hip Hop"
+    },
+    {
+        "album_title": "viagr aboys",
+        "artist_name": "Viagra Boys",
+        "release_date": "2025-04-25",
+        "cover_url": "https://cdn-images.dzcdn.net/images/cover/a69afa292ed3a2b5df8a50391f79f001/250x250-000000-80-0-0.jpg",
+        "genre": "Alternative"
+    },
+    {
+        "album_title": "Where'd You Go",
+        "artist_name": "The Mighty Mighty Bosstones",
+        "release_date": "2006-02-05",
+        "cover_url": "https://cdn-images.dzcdn.net/images/cover/87d6334edc44659a046877a346d549be/250x250-000000-80-0-0.jpg",
+        "genre": "Alternative"
+    },
+    {
+        "album_title": "Skeletá",
+        "artist_name": "Ghost",
+        "release_date": "2025-04-25",
+        "cover_url": "https://cdn-images.dzcdn.net/images/cover/b023f8b09d5485bb371bd53ff50593a7/250x250-000000-80-0-0.jpg",
+        "genre": "Metal"
+    },
+    {
+        "album_title": "Low Rider Bass",
+        "artist_name": "Bass Patrol",
+        "release_date": "2008-10-01",
+        "cover_url": "https://cdn-images.dzcdn.net/images/cover/3814dbfc0c3cdcc7cb4664d3b501ee48/250x250-000000-80-0-0.jpg",
+        "genre": "Electro"
+    },
+    {
+        "album_title": "The Clash (Remastered)",
+        "artist_name": "The Clash",
+        "release_date": "2003-02-05",
+        "cover_url": "https://cdn-images.dzcdn.net/images/cover/5e8cc3e6beeb4a89767602e92fe81ca4/250x250-000000-80-0-0.jpg",
+        "genre": "Alternative"
+    },
+    {
+        "album_title": "Where I've Been, Isn't Where I'm Going: The Complete Edition",
+        "artist_name": "Shaboozey",
+        "release_date": "2025-04-25",
+        "cover_url": "https://cdn-images.dzcdn.net/images/cover/1686593fb0fb7f13e3bd79791c1f272b/250x250-000000-80-0-0.jpg",
+        "genre": "Country"
+    },
+    {
+        "album_title": "The Words You Don't Swallow",
+        "artist_name": "Anarbor",
+        "release_date": "2010-04-20",
+        "cover_url": "https://cdn-images.dzcdn.net/images/cover/cfee96e17208e9d31448e679a8aa7a24/250x250-000000-80-0-0.jpg",
+        "genre": "Alternative"
+    }
+]
