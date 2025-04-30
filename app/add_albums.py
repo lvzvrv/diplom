@@ -1,4 +1,5 @@
-from database import SessionLocal, Album
+from database import SessionLocal
+from app.models.album import Album
 from datetime import datetime
 import json
 

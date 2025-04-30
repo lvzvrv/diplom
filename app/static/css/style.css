@@ -258,3 +258,16 @@ h1 {
     color: #1db954;
     border-bottom: 2px solid #1db954;
 }
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.users-table {
+    margin-top: 20px;
+    width: 100%;
+}
+
+/* Добавьте другие стили по необходимости */

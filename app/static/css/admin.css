@@ -1,0 +1,169 @@
+/* Основные стили таблицы в темной теме */
+.users-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 2rem 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #2d3748;
+  color: #ffffff;
+}
+
+/* Заголовки таблицы */
+.users-table thead th {
+  background-color: #1a202c;
+  color: #ffffff;
+  padding: 1rem 1.5rem;
+  text-align: left;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #4a5568;
+}
+
+/* Ячейки таблицы */
+.users-table tbody td {
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid #4a5568;
+  background-color: #2d3748;
+  transition: all 0.2s ease;
+  color: #e2e8f0;
+}
+
+/* Чередование цвета строк */
+.users-table tbody tr:nth-child(even) td {
+  background-color: #343e4e;
+}
+
+/* Эффект при наведении */
+.users-table tbody tr:hover td {
+  background-color: #4a5568;
+  color: #ffffff;
+}
+
+/* Стили для бейджей ролей */
+.role-badge {
+  display: inline-block;
+  padding: 0.35rem 0.8rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.role-default {
+  background-color: #2c5282;
+  color: #ebf8ff;
+}
+
+.role-critic {
+  background-color: #2f855a;
+  color: #f0fff4;
+}
+
+/* Стили для кнопок */
+.btn-toggle {
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  background-color: #4a6fa5;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-toggle:hover {
+  background-color: #5b85c9;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Анимация обновления строки */
+@keyframes fadeUpdate {
+  0% { background-color: rgba(74, 111, 165, 0.3); }
+  100% { background-color: #4a5568; }
+}
+
+.users-table tr.updating {
+  animation: fadeUpdate 1.5s ease-out;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+  .users-table {
+    background-color: transparent;
+    box-shadow: none;
+  }
+
+  .users-table thead {
+    display: none;
+  }
+
+  .users-table tr {
+    display: block;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    background-color: #2d3748;
+    overflow: hidden;
+  }
+
+  .users-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid #4a5568;
+  }
+
+  .users-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #a0aec0;
+    margin-right: 1rem;
+  }
+
+  .btn-toggle {
+    width: 100%;
+    margin-top: 0.5rem;
+    background-color: #4a6fa5;
+  }
+}
+
+/* Дополнительные элементы интерфейса */
+.container {
+  background-color: #1a202c;
+  padding: 2rem;
+  border-radius: 8px;
+  margin: 1rem;
+}
+
+h1 {
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+}
+
+.navbar {
+  background-color: #1a202c;
+  border-bottom: 1px solid #4a5568;
+}
+
+.navbar a {
+  color: #e2e8f0 !important;
+}
+
+.navbar a:hover {
+  color: #ffffff !important;
+}
+
+.logo {
+  font-weight: 700;
+  color: #63b3ed !important;
+}

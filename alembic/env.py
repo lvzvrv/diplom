@@ -10,7 +10,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 # Импортируем Base из вашего приложения
 from app.database import Base
 from app.models.user import User  # Импортируем все модели
-# from app.models.album import Album  # Раскомментируйте для других моделей
+from app.models.album import Album  # Раскомментируйте для других моделей
 
 config = context.config
 fileConfig(config.config_file_name)

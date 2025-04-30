@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from app.routers import users, root
+from app.routers import users, root, albums, admin
 from app.utils import STATIC_DIR
 from dotenv import load_dotenv
 import os
@@ -17,7 +17,9 @@ app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 app.include_router(users.router, tags=["Users"])
 app.include_router(root.router, tags=["Root"])
-
+# app.include_router(albums.router, tags = ["Albums"])
+app.include_router(admin.router, tags = ["Admin"])
+app.include_router(admin.router)
 
 if __name__ == "__main__":
     import uvicorn

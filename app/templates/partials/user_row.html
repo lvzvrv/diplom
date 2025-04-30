@@ -1,0 +1,21 @@
+<tr id="user-{{ user.id }}">
+    <td>{{ user.id }}</td>
+    <td>{{ user.username }}</td>
+    <td>{{ user.email }}</td>
+    <td>
+        <span class="role-badge {% if user.is_critic %}role-critic{% else %}role-default{% endif %}">
+            {% if user.is_critic %}Критик{% else %}Обычный{% endif %}
+        </span>
+    </td>
+    <td>
+        <button class="btn btn-toggle"
+                hx-patch="/admin/users/{{ user.id }}"
+                hx-target="#user-{{ user.id }}"
+                hx-swap="outerHTML"
+                hx-headers='{"Content-Type": "application/x-www-form-urlencoded"}'
+                name="is_critic"
+                value="{{ not user.is_critic }}">
+            Сделать {% if user.is_critic %}обычным{% else %}критиком{% endif %}
+        </button>
+    </td>
+</tr>
