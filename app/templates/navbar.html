@@ -1,0 +1,13 @@
+<nav class="navbar">
+    <a href="/app/static" class="logo">MusicReviews</a>
+    <div class="nav-links">
+        <a href="/app/static" class="{% if request.url.path == '/' %}active{% endif %}">Лучшие альбомы</a>
+        <a href="/new-releases" class="{% if request.url.path == '/new-releases' %}active{% endif %}">Новые релизы</a>
+        <a href="/genres" class="{% if request.url.path == '/genres' %}active{% endif %}">Жанры</a>
+        {% if user %}
+        <a href="/profile" class="{% if request.url.path == '/profile' %}active{% endif %}">Мой профиль</a>
+        {% else %}
+        <a href="/profile?mode=login" class="{% if request.url.path == '/profile' %}active{% endif %}">Войти</a>
+        {% endif %}
+    </div>
+</nav>

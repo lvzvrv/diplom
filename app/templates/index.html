@@ -5,31 +5,116 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music Reviews - Лучшие альбомы</title>
     <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        .albums-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .album-card {
+            background-color: #2d3748;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .album-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .album-cover {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+        }
+
+        .album-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .album-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        .album-artist {
+            font-size: 1rem;
+            color: #a0aec0;
+            margin-bottom: 1rem;
+        }
+
+        .album-meta {
+            margin-top: auto;
+        }
+
+        .album-date, .album-genre {
+            font-size: 0.9rem;
+            color: #a0aec0;
+            margin-bottom: 0.5rem;
+        }
+
         .rating {
             display: flex;
             align-items: center;
-            margin: 5px 0;
+            margin: 8px 0;
         }
+
+        .rating-label {
+            font-size: 0.8rem;
+            color: #a0aec0;
+            margin-right: 8px;
+            min-width: 80px;
+        }
+
         .rating-stars {
             color: #ffc107;
             margin-right: 8px;
         }
+
         .rating-value {
-            font-weight: bold;
-            font-size: 0.9em;
+            font-weight: 600;
+            font-size: 0.9rem;
         }
+
         .user-rating {
-            color: #4CAF50;
+            color: #48bb78;
         }
+
         .critic-rating {
-            color: #2196F3;
+            color: #4299e1;
         }
-        .rating-label {
-            font-size: 0.8em;
-            color: #666;
-            margin-right: 5px;
+
+        .star-filled {
+            color: #ffc107;
+        }
+
+        .star-half {
+            position: relative;
+            color: #e2e8f0;
+        }
+
+        .star-half::before {
+            content: '\f089';
+            position: absolute;
+            left: 0;
+            color: #ffc107;
+            width: 50%;
+            overflow: hidden;
         }
     </style>
 </head>
@@ -55,50 +140,57 @@
 
         <div class="albums-grid">
             {% for album in albums %}
-            <div class="album-card">
+            <a href="/albums/{{ album.id }}" class="album-card">
                 <img src="{{ album.cover_url or 'https://via.placeholder.com/300' }}"
                      alt="{{ album.album_title }}"
                      class="album-cover">
-                <h3 class="album-title">{{ album.album_title }}</h3>
-                <p class="album-artist">{{ album.artist_name }}</p>
-                <p class="album-date">Дата выхода: {{ album.release_date.strftime('%d.%m.%Y') }}</p>
+                <div class="album-content">
+                    <h3 class="album-title">{{ album.album_title }}</h3>
+                    <p class="album-artist">{{ album.artist_name }}</p>
 
-                <!-- Рейтинг пользователей -->
-                <div class="rating">
-                    <span class="rating-label">Пользователи:</span>
-                    <div class="rating-stars user-rating">
-                        {% for i in range(5) %}
-                            {% if album.user_score >= (i+1)*20 %}
-                                <i class="fas fa-star"></i>
-                            {% elif album.user_score >= i*20 + 10 %}
-                                <i class="fas fa-star-half-alt"></i>
-                            {% else %}
-                                <i class="far fa-star"></i>
-                            {% endif %}
-                        {% endfor %}
+                    <div class="album-meta">
+                        <p class="album-date">Дата выхода: {{ album.release_date.strftime('%d.%m.%Y') }}</p>
+
+                        <!-- Рейтинг пользователей -->
+                        <div class="rating">
+                            <span class="rating-label">Пользователи:</span>
+                            <div class="rating-stars user-rating">
+                                {% set user_rating = album.user_score / 20 %}
+                                {% for i in range(5) %}
+                                    {% if user_rating >= i + 1 %}
+                                        <i class="fas fa-star star-filled"></i>
+                                    {% elif user_rating >= i + 0.5 %}
+                                        <i class="fas fa-star-half-alt star-half"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <span class="rating-value user-rating">{{ "%.1f"|format(user_rating) }}</span>
+                        </div>
+
+                        <!-- Рейтинг критиков -->
+                        <div class="rating">
+                            <span class="rating-label">Критики:</span>
+                            <div class="rating-stars critic-rating">
+                                {% set critic_rating = album.critic_score / 20 %}
+                                {% for i in range(5) %}
+                                    {% if critic_rating >= i + 1 %}
+                                        <i class="fas fa-star star-filled"></i>
+                                    {% elif critic_rating >= i + 0.5 %}
+                                        <i class="fas fa-star-half-alt star-half"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <span class="rating-value critic-rating">{{ "%.1f"|format(critic_rating) }}</span>
+                        </div>
+
+                        <span class="album-genre">{{ album.genre or 'Разное' }}</span>
                     </div>
-                    <span class="rating-value user-rating">{{ "%.1f"|format(album.user_score/20) }}</span>
                 </div>
-
-                <!-- Рейтинг критиков -->
-                <div class="rating">
-                    <span class="rating-label">Критики:</span>
-                    <div class="rating-stars critic-rating">
-                        {% for i in range(5) %}
-                            {% if album.critic_score >= (i+1)*20 %}
-                                <i class="fas fa-star"></i>
-                            {% elif album.critic_score >= i*20 + 10 %}
-                                <i class="fas fa-star-half-alt"></i>
-                            {% else %}
-                                <i class="far fa-star"></i>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                    <span class="rating-value critic-rating">{{ "%.1f"|format(album.critic_score/20) }}</span>
-                </div>
-
-                <span class="album-genre">{{ album.genre or 'Разное' }}</span>
-            </div>
+            </a>
             {% endfor %}
         </div>
     </div>

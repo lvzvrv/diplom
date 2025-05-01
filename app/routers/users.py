@@ -5,6 +5,8 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 import os
 
+from starlette import status
+
 from app.models.user import User
 from app.database import get_db
 from app.utils import get_password_hash, verify_password, TEMPLATES_DIR
@@ -15,6 +17,25 @@ templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
 sessions = {}
 
+
+def get_current_user(
+        request: Request,
+        db: Session = Depends(get_db)
+) -> User:
+    session_id = request.cookies.get("session_id")
+    if not session_id or session_id not in sessions:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated"
+        )
+
+    user = db.query(User).filter(User.id == sessions[session_id]).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User not found"
+        )
+    return user
 @router.get("/profile", response_class=HTMLResponse)
 async def profile_page(
     request: Request,

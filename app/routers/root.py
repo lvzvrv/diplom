@@ -8,7 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from app.database import SessionLocal
 from app.models.user import User
 from app.models.album import Album
-from app.models.album import AlbumRating
+from app.models.album_review import AlbumReview
 from app.routers.users import sessions
 from app.utils import TEMPLATES_DIR
 

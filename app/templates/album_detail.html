@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ album.title }} - {{ album.artist }}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/admin.css">
+    <style>
+        .album-header {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            align-items: center;
+        }
+        .album-cover {
+            width: 300px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .album-info {
+            flex: 1;
+        }
+        .album-title {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+        .album-artist {
+            font-size: 1.8rem;
+            color: #a0aec0;
+            margin-bottom: 1.5rem;
+        }
+        .album-meta {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .album-rating {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .rating-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        .user-rating {
+            background-color: #2c5282;
+            color: #ebf8ff;
+        }
+        .critic-rating {
+            background-color: #2f855a;
+            color: #f0fff4;
+        }
+        .review-form {
+            background-color: #2d3748;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        .review-list {
+            background-color: #2d3748;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .review-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid #4a5568;
+        }
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        .review-user {
+            font-weight: 600;
+            color: #ffffff;
+        }
+        .review-role {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+        .role-critic {
+            background-color: #2f855a;
+            color: #f0fff4;
+        }
+        .role-user {
+            background-color: #2c5282;
+            color: #ebf8ff;
+        }
+        .review-score {
+            font-weight: 600;
+            color: #f6ad55;
+        }
+        .review-text {
+            margin-top: 0.5rem;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+        .review-date {
+            font-size: 0.8rem;
+            color: #a0aec0;
+        }
+    </style>
+</head>
+<body>
+    {% include "navbar.html" %}
+
+    <div class="container">
+        <div class="album-header">
+            <img src="{{ album.cover_url or 'https://via.placeholder.com/300' }}"
+                 alt="{{ album.title }}" class="album-cover">
+            <div class="album-info">
+                <h1 class="album-title">{{ album.title }}</h1>
+                <h2 class="album-artist">{{ album.artist }}</h2>
+                <div class="album-meta">
+                    <span>{{ album.release_year }}</span>
+                    <span>{{ album.genre or 'Разное' }}</span>
+                </div>
+                <div class="album-rating">
+                    <span class="rating-badge user-rating">
+                        Пользователи: {{ "%.1f"|format(album.user_score/20) }}/5
+                    </span>
+                    <span class="rating-badge critic-rating">
+                        Критики: {{ "%.1f"|format(album.critic_score/20) }}/5
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Форма для добавления отзыва -->
+        <form method="post" action="/albums/{{ album.id }}/reviews" class="review-form">
+            <h3>Оставить отзыв</h3>
+            <div style="margin-bottom: 1rem;">
+                <label for="score" style="display: block; margin-bottom: 0.5rem;">Оценка (1-100):</label>
+                <input type="number" id="score" name="score" min="1" max="100" required
+                       style="padding: 0.5rem; border-radius: 4px; border: 1px solid #4a5568; background: #1a202c; color: white;">
+            </div>
+            <div style="margin-bottom: 1rem;">
+                <label for="review_text" style="display: block; margin-bottom: 0.5rem;">Текст отзыва:</label>
+                <textarea id="review_text" name="review_text" rows="4" required
+                          style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #4a5568; background: #1a202c; color: white;"></textarea>
+            </div>
+            <button type="submit" class="btn-toggle">Отправить отзыв</button>
+        </form>
+
+        <!-- Список отзывов -->
+        <div class="review-list">
+            <h3 style="padding: 1.5rem; margin: 0; border-bottom: 1px solid #4a5568;">Отзывы</h3>
+            {% for review in album.reviews %}
+            <div class="review-item">
+                <div class="review-header">
+                    <div>
+                        <span class="review-user">{{ review.user_name }}</span>
+                        <span class="review-role {% if review.user_role == 'critic' %}role-critic{% else %}role-user{% endif %}">
+                            {{ 'Критик' if review.user_role == 'critic' else 'Пользователь' }}
+                        </span>
+                    </div>
+                    <span class="review-score">{{ review.score }}/100</span>
+                </div>
+                <div class="review-text">{{ review.review_text }}</div>
+                <div class="review-date">
+                    {{ review.created_at.strftime('%d.%m.%Y %H:%M') }}
+                </div>
+            </div>
+            {% else %}
+            <div style="padding: 1.5rem; color: #a0aec0;">
+                Пока нет отзывов. Будьте первым!
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
