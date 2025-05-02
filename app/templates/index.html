@@ -5,98 +5,136 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music Reviews - Лучшие альбомы</title>
     <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="stylesheet" href="/static/css/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .albums-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 40px;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 40px 0 40px;
+            font-size: 36px;
+            color: #ffffff;
+        }
+
+        .albums-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            padding: 10px 0;
         }
 
         .album-card {
-            background-color: #2d3748;
+            background-color: #181818;
             border-radius: 10px;
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
+            padding: 20px;
+            transition: all 0.3s ease;
+            width: 300px;
+            border: 1px solid #282828;
+            text-decoration: none !important;
         }
 
         .album-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            background-color: #282828;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
         }
 
         .album-cover {
             width: 100%;
-            height: 280px;
+            border-radius: 6px;
+            aspect-ratio: 1/1;
             object-fit: cover;
-        }
-
-        .album-content {
-            padding: 1.5rem;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
         .album-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: white;
+            font-size: 18px;
+            margin: 10px 0 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #ffffff;
+            text-decoration: none;
         }
 
         .album-artist {
-            font-size: 1rem;
-            color: #a0aec0;
-            margin-bottom: 1rem;
+            color: #b3b3b8;
+            margin-bottom: 12px;
+            font-size: 15px;
+            text-decoration: none;
         }
 
-        .album-meta {
-            margin-top: auto;
+        .album-date {
+            color: #b3b3b8;
+            font-size: 13px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
         }
 
-        .album-date, .album-genre {
-            font-size: 0.9rem;
-            color: #a0aec0;
-            margin-bottom: 0.5rem;
+        .album-date i {
+            color: #1db954;
+        }
+
+        .album-genre {
+            display: inline-block;
+            background-color: #1db954;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-decoration: none;
         }
 
         .rating {
             display: flex;
             align-items: center;
-            margin: 8px 0;
+            margin: 12px 0;
+            gap: 8px;
         }
 
         .rating-label {
-            font-size: 0.8rem;
-            color: #a0aec0;
-            margin-right: 8px;
-            min-width: 80px;
+            color: #b3b3b8;
+            font-size: 13px;
+            min-width: 85px;
+            text-decoration: none;
         }
 
         .rating-stars {
             color: #ffc107;
-            margin-right: 8px;
         }
 
         .rating-value {
-            font-weight: 600;
-            font-size: 0.9rem;
+            font-weight: bold;
+            font-size: 14px;
+            text-decoration: none;
         }
 
-        .user-rating {
-            color: #48bb78;
+        .user-rating .rating-value {
+            color: #1db954;
         }
 
-        .critic-rating {
-            color: #4299e1;
+        .critic-rating .rating-value {
+            color: #3b82f6;
         }
 
         .star-filled {
@@ -105,7 +143,7 @@
 
         .star-half {
             position: relative;
-            color: #e2e8f0;
+            color: #404040;
         }
 
         .star-half::before {
@@ -116,31 +154,39 @@
             width: 50%;
             overflow: hidden;
         }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            h1 {
+                font-size: 26px;
+                margin: 30px 0;
+            }
+
+            .albums-container {
+                gap: 15px;
+            }
+
+            .album-card {
+                width: 100%;
+                max-width: 320px;
+                padding: 15px;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Навигационная панель -->
-    <nav class="navbar">
-        <a href="/" class="logo">MusicReviews</a>
-        <div class="nav-links">
-            <a href="/" class="{% if request.url.path == '/' %}active{% endif %}">Лучшие альбомы</a>
-            <a href="/new-releases" class="{% if request.url.path == '/new-releases' %}active{% endif %}">Новые релизы</a>
-            <a href="/genres" class="{% if request.url.path == '/genres' %}active{% endif %}">Жанры</a>
-            {% if user %}
-            <a href="/profile" class="{% if request.url.path == '/profile' %}active{% endif %}">Мой профиль</a>
-            {% else %}
-            <a href="/profile?mode=login" class="{% if request.url.path == '/profile' %}active{% endif %}">Войти</a>
-            {% endif %}
-        </div>
-    </nav>
+    {% include "navbar.html" %}
 
     <!-- Основное содержимое -->
     <div class="container">
         <h1>Лучшие альбомы</h1>
 
-        <div class="albums-grid">
+        <div class="albums-container">
             {% for album in albums %}
-            <a href="/albums/{{ album.id }}" class="album-card">
+            <a href="/albums/{{ album.id }}" class="album-card" style="text-decoration: none;">
                 <img src="{{ album.cover_url or 'https://via.placeholder.com/300' }}"
                      alt="{{ album.album_title }}"
                      class="album-cover">
@@ -149,12 +195,15 @@
                     <p class="album-artist">{{ album.artist_name }}</p>
 
                     <div class="album-meta">
-                        <p class="album-date">Дата выхода: {{ album.release_date.strftime('%d.%m.%Y') }}</p>
+                        <p class="album-date">
+                            <i class="fas fa-calendar-alt"></i>
+                            {{ album.release_date.strftime('%d.%m.%Y') }}
+                        </p>
 
                         <!-- Рейтинг пользователей -->
-                        <div class="rating">
+                        <div class="rating user-rating">
                             <span class="rating-label">Пользователи:</span>
-                            <div class="rating-stars user-rating">
+                            <div class="rating-stars">
                                 {% set user_rating = album.user_score / 20 %}
                                 {% for i in range(5) %}
                                     {% if user_rating >= i + 1 %}
@@ -166,13 +215,13 @@
                                     {% endif %}
                                 {% endfor %}
                             </div>
-                            <span class="rating-value user-rating">{{ "%.1f"|format(user_rating) }}</span>
+                            <span class="rating-value">{{ "%.1f"|format(user_rating) }}</span>
                         </div>
 
                         <!-- Рейтинг критиков -->
-                        <div class="rating">
+                        <div class="rating critic-rating">
                             <span class="rating-label">Критики:</span>
-                            <div class="rating-stars critic-rating">
+                            <div class="rating-stars">
                                 {% set critic_rating = album.critic_score / 20 %}
                                 {% for i in range(5) %}
                                     {% if critic_rating >= i + 1 %}
@@ -184,7 +233,7 @@
                                     {% endif %}
                                 {% endfor %}
                             </div>
-                            <span class="rating-value critic-rating">{{ "%.1f"|format(critic_rating) }}</span>
+                            <span class="rating-value">{{ "%.1f"|format(critic_rating) }}</span>
                         </div>
 
                         <span class="album-genre">{{ album.genre or 'Разное' }}</span>

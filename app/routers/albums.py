@@ -1,27 +1,28 @@
+import os
+from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, HTTPException, Request, Form
 from sqlalchemy.orm import Session
 from starlette.responses import RedirectResponse
-
+from fastapi.templating import Jinja2Templates
+from itsdangerous import URLSafeTimedSerializer
+from ..database import get_db
 from ..models.album import Album
 from ..models.album_review import AlbumReview
 from ..models.user import User
-from ..database import get_db
-from ..schemas import AlbumDetailResponse, ReviewCreate
-from fastapi.templating import Jinja2Templates
-from ..utils import TEMPLATES_DIR
-from datetime import datetime
 from ..routers.users import get_current_user
-from app.utils import TEMPLATES_DIR
+from datetime import datetime
+
+load_dotenv()
 
 router = APIRouter()
-templates = Jinja2Templates(directory=TEMPLATES_DIR)
-
+templates = Jinja2Templates(directory="templates")
+csrf_serializer = URLSafeTimedSerializer(os.getenv("CSRF_SECRET_KEY"))
 
 @router.get("/albums/{album_id}")
 async def get_album(
-        album_id: int,
-        request: Request,
-        db: Session = Depends(get_db)
+    album_id: int,
+    request: Request,
+    db: Session = Depends(get_db)
 ):
     album = db.query(Album).filter(Album.id == album_id).first()
     if not album:
@@ -35,6 +36,16 @@ async def get_album(
         AlbumReview.created_at.desc()
     ).all()
 
+    current_user = None
+    if request.cookies.get("access_token"):
+        try:
+            current_user = await get_current_user(request, db)
+        except Exception as e:
+            print(f"Auth error: {e}")
+
+    csrf_token = csrf_serializer.dumps("csrf_protection")
+    request.session["csrf_token"] = csrf_token
+
     album_data = {
         **album.__dict__,
         "reviews": [{
@@ -44,8 +55,10 @@ async def get_album(
             "created_at": review.created_at,
             "user_id": user.id,
             "username": user.username,
-            "is_critic": user.is_critic
-        } for review, user in reviews]
+            "is_critic_review": review.is_critic_review
+        } for review, user in reviews],
+        "current_user": current_user,
+        "csrf_token": csrf_token
     }
 
     return templates.TemplateResponse(
@@ -53,18 +66,30 @@ async def get_album(
         {"request": request, "album": album_data}
     )
 
-
 @router.post("/albums/{album_id}/reviews")
 async def add_review(
     album_id: int,
     request: Request,
     review_text: str = Form(...),
     score: int = Form(...),
+    csrf_token: str = Form(...),
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)  # Используем нашу функцию
+    current_user: User = Depends(get_current_user)
 ):
-    if not 1 <= score <= 100:
-        raise HTTPException(status_code=400, detail="Score must be between 1 and 100")
+    session_token = request.session.get("csrf_token")
+    if not session_token or session_token != csrf_token:
+        raise HTTPException(status_code=403, detail="Invalid CSRF token")
+
+    if not 0 <= score <= 100:
+        raise HTTPException(status_code=400, detail="Score must be between 0 and 100")
+
+    existing_review = db.query(AlbumReview).filter(
+        AlbumReview.album_id == album_id,
+        AlbumReview.user_id == current_user.id
+    ).first()
+
+    if existing_review:
+        raise HTTPException(status_code=400, detail="You've already reviewed this album")
 
     album = db.query(Album).filter(Album.id == album_id).first()
     if not album:
@@ -81,24 +106,16 @@ async def add_review(
 
     db.add(review)
     db.commit()
-
-    # Обновляем средние оценки
     update_album_scores(db, album_id)
 
-    return RedirectResponse(
-        url=f"/albums/{album_id}",
-        status_code=303
-    )
-
+    return RedirectResponse(url=f"/albums/{album_id}", status_code=303)
 
 def update_album_scores(db: Session, album_id: int):
     album = db.query(Album).filter(Album.id == album_id).first()
     if not album:
         return
 
-    reviews = db.query(AlbumReview).filter(
-        AlbumReview.album_id == album_id
-    ).all()
+    reviews = db.query(AlbumReview).filter(AlbumReview.album_id == album_id).all()
 
     if reviews:
         total_score = sum(r.score for r in reviews)
