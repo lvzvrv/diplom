@@ -109,24 +109,45 @@ async def add_review(
 
     db.add(review)
     db.commit()
-    update_album_scores(db, album_id)
+    if current_user.is_critic:
+        update_critic_score(db, album_id)
+    else:
+        update_user_score(db, album_id)
 
     return RedirectResponse(url=f"/albums/{album_id}", status_code=303)
 
-def update_album_scores(db: Session, album_id: int):
+def update_user_score(db: Session, album_id: int):
     album = db.query(Album).filter(Album.id == album_id).first()
     if not album:
         return
 
-    reviews = db.query(AlbumReview).filter(AlbumReview.album_id == album_id).all()
+    reviews = db.query(AlbumReview).filter(
+        AlbumReview.album_id == album_id,
+        AlbumReview.is_critic_review == False  # Только обычные пользователи
+    ).all()
 
     if reviews:
         total_score = sum(r.score for r in reviews)
         album.user_score = total_score / len(reviews)
+    else:
+        album.user_score = 0.0
 
-        critic_reviews = [r for r in reviews if r.is_critic_review]
-        if critic_reviews:
-            total_critic_score = sum(r.score for r in critic_reviews)
-            album.critic_score = total_critic_score / len(critic_reviews)
+    db.commit()
+
+def update_critic_score(db: Session, album_id: int):
+    album = db.query(Album).filter(Album.id == album_id).first()
+    if not album:
+        return
+
+    reviews = db.query(AlbumReview).filter(
+        AlbumReview.album_id == album_id,
+        AlbumReview.is_critic_review == True  # Только критики
+    ).all()
+
+    if reviews:
+        total_score = sum(r.score for r in reviews)
+        album.critic_score = total_score / len(reviews)
+    else:
+        album.critic_score = 0.0
 
     db.commit()

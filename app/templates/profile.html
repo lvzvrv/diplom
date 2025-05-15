@@ -7,9 +7,23 @@
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #1db954;
+            --dark: #121212;
+            --darker: #000000;
+            --dark-light: #181818;
+            --light: #ffffff;
+            --gray: #b3b3b3;
+            --gray-dark: #535353;
+            --success: #1db954;
+            --warning: #ffc107;
+            --danger: #ff4d4d;
+            --info: #3b82f6;
+        }
+
         body {
-            background-color: #121212;
-            color: #ffffff;
+            background-color: var(--dark);
+            color: var(--light);
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -17,48 +31,66 @@
         }
 
         .profile-container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 30px;
-            background-color: #181818;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
         }
 
-        .profile-container h1 {
-            color: #1db954;
+        .profile-header {
+            background-color: var(--dark-light);
+            padding: 30px;
+            border-radius: 10px;
             margin-bottom: 30px;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: white;
         }
 
         .profile-info {
-            background-color: #282828;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
+            flex: 1;
         }
 
-        .profile-info p {
-            font-size: 1.1rem;
-            margin: 15px 0;
+        .profile-name {
+            font-size: 28px;
+            margin: 0 0 10px;
+            color: var(--light);
         }
 
-        .profile-info strong {
-            color: #1db954;
+        .profile-meta {
+            color: var(--gray);
+            margin: 5px 0;
+        }
+
+        .profile-meta i {
+            color: var(--primary);
+            width: 20px;
+            text-align: center;
+            margin-right: 8px;
         }
 
         .logout-button {
-            display: block;
-            width: 200px;
-            margin: 0 auto;
-            text-align: center;
-            background-color: #ff4d4d;
+            background-color: var(--danger);
             color: white;
-            padding: 12px 20px;
-            border-radius: 25px;
-            text-decoration: none;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
             font-weight: bold;
-            transition: all 0.3s;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-block;
+            margin-top: 10px;
         }
 
         .logout-button:hover {
@@ -66,10 +98,121 @@
             transform: translateY(-2px);
         }
 
+        .reviews-section {
+            margin-top: 40px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .reviews-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .review-card {
+            background-color: var(--dark-light);
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s;
+            border: 1px solid var(--gray-dark);
+        }
+
+        .review-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .review-album {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .review-album-cover {
+            width: 60px;
+            height: 60px;
+            border-radius: 4px;
+            object-fit: cover;
+        }
+
+        .review-album-info {
+            flex: 1;
+        }
+
+        .review-album-title {
+            font-weight: bold;
+            margin: 0;
+            color: var(--light);
+        }
+
+        .review-album-artist {
+            color: var(--gray);
+            margin: 5px 0 0;
+            font-size: 14px;
+        }
+
+        .review-content {
+            margin-top: 15px;
+        }
+
+        .review-score {
+            display: inline-block;
+            background-color: rgba(29, 185, 84, 0.2);
+            color: var(--success);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .review-text {
+            color: var(--gray);
+            line-height: 1.6;
+            margin: 10px 0;
+            white-space: pre-wrap;
+        }
+
+        .review-date {
+            color: var(--gray-dark);
+            font-size: 12px;
+            margin-top: 15px;
+        }
+
+        .critic-badge {
+            color: var(--info);
+            font-size: 14px;
+            margin-left: 5px;
+        }
+
+        .no-reviews {
+            text-align: center;
+            color: var(--gray);
+            padding: 40px 0;
+        }
+
         @media (max-width: 768px) {
-            .profile-container {
-                margin: 20px;
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
                 padding: 20px;
+            }
+
+            .profile-avatar {
+                margin: 0 auto;
+            }
+
+            .reviews-list {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -78,18 +221,62 @@
     {% include "navbar.html" %}
 
     <div class="profile-container">
-        <h1><i class="fas fa-user-circle"></i> Мой профиль</h1>
-
-        <div class="profile-info">
-            <p><strong><i class="fas fa-user"></i> Имя пользователя:</strong> {{ user.username }}</p>
-            <p><strong><i class="fas fa-envelope"></i> Email:</strong> {{ user.email }}</p>
-            <p><strong><i class="fas fa-calendar-alt"></i> Дата регистрации:</strong> {{ user.created_at.strftime('%d.%m.%Y') }}</p>
-            {% if user.is_critic %}
-            <p><strong><i class="fas fa-star"></i> Статус:</strong> Критик</p>
-            {% endif %}
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="profile-info">
+                <h1 class="profile-name">{{ user.username }}</h1>
+                <p class="profile-meta"><i class="fas fa-envelope"></i> {{ user.email }}</p>
+                <p class="profile-meta"><i class="fas fa-calendar-alt"></i> Зарегистрирован: {{ user.created_at.strftime('%d.%m.%Y') }}</p>
+                {% if user.is_critic %}
+                <p class="profile-meta"><i class="fas fa-star"></i> Статус: <span style="color: var(--info);">Критик</span></p>
+                {% endif %}
+                <a href="/logout" class="logout-button"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+            </div>
         </div>
 
-        <a href="/logout" class="logout-button"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+        <div class="reviews-section">
+            <h2 class="section-title"><i class="fas fa-comments"></i> Мои отзывы</h2>
+
+            {% if reviews %}
+            <div class="reviews-list">
+                {% for review in reviews %}
+                <div class="review-card">
+                    <div class="review-album">
+                        <img src="{{ review.cover_url or 'https://via.placeholder.com/60' }}"
+                             alt="{{ review.album_title }}"
+                             class="review-album-cover">
+                        <div class="review-album-info">
+                            <h3 class="review-album-title">
+                                <a href="/albums/{{ review.album_id }}" style="color: inherit; text-decoration: none;">
+                                    {{ review.album_title }}
+                                </a>
+                            </h3>
+                            <p class="review-album-artist">{{ review.artist_name }}</p>
+                        </div>
+                    </div>
+                    <div class="review-content">
+                        <span class="review-score">{{ review.score }}/100</span>
+                        {% if review.is_critic_review %}
+                        <span class="critic-badge"><i class="fas fa-check-circle" title="Отзыв критика"></i></span>
+                        {% endif %}
+                        <div class="review-text">{{ review.review_text }}</div>
+                        <div class="review-date">
+                            <i class="far fa-clock"></i> {{ review.created_at.strftime('%d.%m.%Y %H:%M') }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="no-reviews">
+                <i class="far fa-comment-dots" style="font-size: 40px; margin-bottom: 15px;"></i>
+                <p>Вы еще не оставили ни одного отзыва</p>
+                <a href="/" style="color: var(--primary);">Найти альбомы для отзыва</a>
+            </div>
+            {% endif %}
+        </div>
     </div>
 </body>
 </html>
