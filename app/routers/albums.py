@@ -57,13 +57,16 @@ async def get_album(
             "username": user.username,
             "is_critic_review": review.is_critic_review
         } for review, user in reviews],
-        "current_user": current_user,
         "csrf_token": csrf_token
     }
 
     return templates.TemplateResponse(
         "album_detail.html",
-        {"request": request, "album": album_data}
+        {
+            "request": request,
+            "album": album_data,
+            "current_user": current_user  # Добавлено отдельно
+        }
     )
 
 @router.post("/albums/{album_id}/reviews")

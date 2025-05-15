@@ -5,34 +5,91 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Мой профиль</title>
     <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .profile-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #181818;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .profile-container h1 {
+            color: #1db954;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .profile-info {
+            background-color: #282828;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .profile-info p {
+            font-size: 1.1rem;
+            margin: 15px 0;
+        }
+
+        .profile-info strong {
+            color: #1db954;
+        }
+
+        .logout-button {
+            display: block;
+            width: 200px;
+            margin: 0 auto;
+            text-align: center;
+            background-color: #ff4d4d;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .logout-button:hover {
+            background-color: #ff1a1a;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .profile-container {
+                margin: 20px;
+                padding: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Навигационная панель (та же, что в index.html) -->
-    <nav class="navbar">
-        <a href="/" class="logo">MusicReviews</a>
-        <div class="nav-links">
-            <a href="/" class="{% if request.url.path == '/' %}active{% endif %}">Лучшие альбомы</a>
-            <a href="/new-releases" class="{% if request.url.path == '/new-releases' %}active{% endif %}">Новые релизы</a>
-            <a href="/genres" class="{% if request.url.path == '/genres' %}active{% endif %}">Жанры</a>
-            {% if user %}
-            <a href="/profile" class="{% if request.url.path == '/profile' %}active{% endif %}">Мой профиль</a>
-            {% else %}
-            <a href="/profile?mode=login" class="{% if request.url.path == '/profile' %}active{% endif %}">Войти</a>
-            {% endif %}
-        </div>
-    </nav>
+    {% include "navbar.html" %}
 
-    <!-- Содержимое профиля -->
     <div class="profile-container">
-        <h1>Мой профиль</h1>
+        <h1><i class="fas fa-user-circle"></i> Мой профиль</h1>
 
         <div class="profile-info">
-            <p><strong>Имя пользователя:</strong> {{ user.username }}</p>
-            <p><strong>Email:</strong> {{ user.email }}</p>
-            <p><strong>Дата регистрации:</strong> {{ user.created_at.strftime('%d.%m.%Y') }}</p>
+            <p><strong><i class="fas fa-user"></i> Имя пользователя:</strong> {{ user.username }}</p>
+            <p><strong><i class="fas fa-envelope"></i> Email:</strong> {{ user.email }}</p>
+            <p><strong><i class="fas fa-calendar-alt"></i> Дата регистрации:</strong> {{ user.created_at.strftime('%d.%m.%Y') }}</p>
+            {% if user.is_critic %}
+            <p><strong><i class="fas fa-star"></i> Статус:</strong> Критик</p>
+            {% endif %}
         </div>
 
-        <a href="/logout" class="logout-button">Выйти</a>
+        <a href="/logout" class="logout-button"><i class="fas fa-sign-out-alt"></i> Выйти</a>
     </div>
 </body>
 </html>

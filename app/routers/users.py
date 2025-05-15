@@ -82,6 +82,7 @@ async def register_page(request: Request):
 
 @router.post("/login")
 async def login_process(
+        request: Request,
         response: Response,
         username: str = Form(...),
         password: str = Form(...),
@@ -90,14 +91,17 @@ async def login_process(
     user = db.query(User).filter(User.username == username).first()
     if not user or not verify_password(password, user.password):
         return templates.TemplateResponse("auth.html", {
-            "request": Request,
+            "request": request,
             "mode": "login",
             "error": "Invalid username or password"
         })
 
     access_token = create_access_token(data={"sub": user.username})
 
-    response = RedirectResponse(url="/", status_code=303)
+    # Получаем URL для перенаправления
+    redirect_url = request.query_params.get("next", "/")
+
+    response = RedirectResponse(url=redirect_url, status_code=303)
     response.set_cookie(
         key="access_token",
         value=f"Bearer {access_token}",

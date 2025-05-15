@@ -400,7 +400,7 @@
         </form>
         {% else %}
         <div class="review-form" style="text-align: center;">
-            <p>Чтобы оставить отзыв, пожалуйста <a href="/login" style="color: var(--primary);">войдите</a> в систему</p>
+            <p>Чтобы оставить отзыв, пожалуйста <a href="/login?next={{ request.url.path }}" style="color: var(--primary);">войдите</a> в систему</p>
         </div>
         {% endif %}
 
@@ -485,6 +485,20 @@
                 spinner.style.display = 'none';
             }
         });
+
+        // Проверяем изменение состояния авторизации
+        function checkAuthState() {
+            const isLoggedIn = document.cookie.includes('access_token');
+
+            // Если вошли - перезагружаем страницу для обновления интерфейса
+            if (isLoggedIn && !document.querySelector('#reviewForm')) {
+                setTimeout(() => location.reload(), 500);
+            }
+        }
+
+        // Проверяем при загрузке и каждые 2 секунды
+        checkAuthState();
+        setInterval(checkAuthState, 2000);
 
         document.addEventListener('DOMContentLoaded', function() {
             const slider = document.getElementById('score');
