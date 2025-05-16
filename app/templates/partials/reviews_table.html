@@ -1,0 +1,65 @@
+<table class="reviews-table">
+    <thead>
+        <tr>
+            <th>Альбом</th>
+            <th>Исполнитель</th>
+            <th>Пользователь</th>
+            <th>Оценка</th>
+            <th>Отзыв</th>
+            <th>Дата</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if reviews %}
+            {% for review in reviews %}
+            <tr>
+                <td>
+                    <a href="/albums/{{ review.album_id }}" style="color:inherit;text-decoration:none;">
+                        {{ review.album_title }}
+                    </a>
+                </td>
+                <td>{{ review.artist_name }}</td>
+                <td>
+                    {{ review.username }}
+                    {% if review.is_critic %}
+                    <i class="fas fa-check-circle critic-badge" title="Критик"></i>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if review.score >= 70 %}
+                    <span class="score-badge score-high">{{ review.score }}</span>
+                    {% elif review.score >= 40 %}
+                    <span class="score-badge score-medium">{{ review.score }}</span>
+                    {% else %}
+                    <span class="score-badge score-low">{{ review.score }}</span>
+                    {% endif %}
+                </td>
+                <td class="review-text" title="{{ review.review_text }}">
+                    {{ review.review_text|truncate(50) }}
+                </td>
+                <td>{{ review.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+                <td>
+                    <form action="/admin/reviews/{{ review.id }}/delete" method="post"
+                          hx-post="/admin/reviews/{{ review.id }}/delete"
+                          hx-target="closest tr"
+                          hx-swap="outerHTML"
+                          onsubmit="return confirm('Удалить этот отзыв?')">
+                        <button type="submit" class="btn btn-delete"><i class="fas fa-trash"></i> Удалить</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="7" class="no-reviews">
+                    <i class="far fa-comment-dots" style="font-size:40px;margin-bottom:15px;"></i>
+                    <p>Отзывы не найдены</p>
+                    {% if search_query %}
+                    <a href="/admin/reviews" style="color:var(--primary);">Сбросить поиск</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>

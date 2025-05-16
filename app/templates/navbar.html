@@ -6,7 +6,6 @@
         <a href="/genres" class="{% if request.url.path == '/genres' %}active{% endif %}">Жанры</a>
 
         {% if current_user is not none %}
-            <span class="user-greeting">Привет, {{ current_user.username }}!</span>
             <a href="/profile" class="{% if request.url.path == '/profile' %}active{% endif %}">Профиль</a>
             <a href="/logout" class="logout-btn">Выйти</a>
         {% else %}

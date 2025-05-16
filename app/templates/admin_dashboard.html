@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1db954;
+            --dark: #121212;
+            --dark-light: #181818;
+            --light: #ffffff;
+            --gray: #b3b3b3;
+            --users-color: #3b82f6;
+            --albums-color: #1db954;
+            --reviews-color: #f59e0b;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            color: var(--primary);
+        }
+
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 0 20px;
+        }
+
+        .dashboard-card {
+            background-color: var(--dark-light);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+            border-top: 4px solid;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .card-users {
+            border-color: var(--users-color);
+        }
+
+        .card-albums {
+            border-color: var(--albums-color);
+        }
+
+        .card-reviews {
+            border-color: var(--reviews-color);
+        }
+
+        .card-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+
+        .icon-users {
+            color: var(--users-color);
+        }
+
+        .icon-albums {
+            color: var(--albums-color);
+        }
+
+        .icon-reviews {
+            color: var(--reviews-color);
+        }
+
+        .card-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .card-description {
+            color: var(--gray);
+            margin-bottom: 25px;
+        }
+
+        .card-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            border-radius: 25px;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .card-btn:hover {
+            background-color: #1ed760;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .page-title {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="header">
+            <h1 class="page-title"><i class="fas fa-cog"></i> Админ-панель</h1>
+        </div>
+
+        <div class="dashboard-cards">
+            <!-- Карточка управления пользователями -->
+            <div class="dashboard-card card-users">
+                <div class="card-icon icon-users">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h2 class="card-title">Управление пользователями</h2>
+                <p class="card-description">
+                    Изменение ролей пользователей, назначение критиков
+                </p>
+                <a href="/admin/users" class="card-btn">
+                    <i class="fas fa-arrow-right"></i> Перейти
+                </a>
+            </div>
+
+            <!-- Карточка управления альбомами -->
+            <div class="dashboard-card card-albums">
+                <div class="card-icon icon-albums">
+                    <i class="fas fa-compact-disc"></i>
+                </div>
+                <h2 class="card-title">Управление альбомами</h2>
+                <p class="card-description">
+                    Добавление, редактирование и удаление альбомов
+                </p>
+                <a href="/admin/albums" class="card-btn">
+                    <i class="fas fa-arrow-right"></i> Перейти
+                </a>
+            </div>
+
+            <!-- Карточка управления отзывами -->
+            <div class="dashboard-card card-reviews">
+                <div class="card-icon icon-reviews">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h2 class="card-title">Управление отзывами</h2>
+                <p class="card-description">
+                    Просмотр и удаление отзывов пользователей
+                </p>
+                <a href="/admin/reviews" class="card-btn">
+                    <i class="fas fa-arrow-right"></i> Перейти
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

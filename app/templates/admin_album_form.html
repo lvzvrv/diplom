@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ form_title }}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1db954;
+            --dark: #121212;
+            --darker: #000000;
+            --dark-light: #181818;
+            --light: #ffffff;
+            --gray: #b3b3b3;
+            --gray-dark: #535353;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 30px;
+            background-color: var(--dark-light);
+            border-radius: 10px;
+        }
+
+        .form-title {
+            font-size: 24px;
+            color: var(--primary);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 6px;
+            border: 1px solid var(--gray-dark);
+            background: var(--dark);
+            color: var(--light);
+            font-family: inherit;
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #1ed760;
+        }
+
+        .btn-secondary {
+            background-color: var(--gray-dark);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--gray);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .preview-cover {
+            max-width: 200px;
+            max-height: 200px;
+            margin-top: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1 class="form-title"><i class="fas fa-compact-disc"></i> {{ form_title }}</h1>
+
+        <form action="{{ action_url }}" method="post">
+            <div class="form-group">
+                <label for="album_title">Название альбома</label>
+                <input type="text" id="album_title" name="album_title" class="form-control"
+                       value="{{ album.album_title if album else '' }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="artist_name">Исполнитель</label>
+                <input type="text" id="artist_name" name="artist_name" class="form-control"
+                       value="{{ album.artist_name if album else '' }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="release_date">Дата выхода</label>
+                <input type="date" id="release_date" name="release_date" class="form-control"
+                       value="{{ album.release_date.strftime('%Y-%m-%d') if album else '' }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="genre">Жанр</label>
+                <input type="text" id="genre" name="genre" class="form-control"
+                       value="{{ album.genre if album else '' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="cover_url">Ссылка на обложку</label>
+                <input type="url" id="cover_url" name="cover_url" class="form-control"
+                       value="{{ album.cover_url if album and album.cover_url else '' }}"
+                       onchange="document.getElementById('cover-preview').style.display = this.value ? 'block' : 'none';
+                                document.getElementById('cover-preview').src = this.value;">
+                <img id="cover-preview" class="preview-cover"
+                     src="{{ album.cover_url if album and album.cover_url else '' }}"
+                     style="display: {{ 'block' if album and album.cover_url else 'none' }};">
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Сохранить
+                </button>
+                <a href="/admin/albums" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Отмена
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Превью обложки при вводе URL
+        document.getElementById('cover_url')?.addEventListener('input', function(e) {
+            const preview = document.getElementById('cover-preview');
+            if (this.value) {
+                preview.src = this.value;
+                preview.style.display = 'block';
+            } else {
+                preview.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

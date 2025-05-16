@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админка - Управление отзывами</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+    <style>
+        :root {
+            --primary: #1db954;
+            --dark: #121212;
+            --darker: #000000;
+            --dark-light: #181818;
+            --light: #ffffff;
+            --gray: #b3b3b3;
+            --gray-dark: #535353;
+            --critic-color: #3b82f6;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        .search-form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input {
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid var(--gray-dark);
+            background: var(--dark-light);
+            color: var(--light);
+            min-width: 300px;
+        }
+
+        .reviews-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .reviews-table th, .reviews-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-dark);
+        }
+
+        .reviews-table th {
+            background-color: var(--dark-light);
+            color: var(--primary);
+        }
+
+        .reviews-table tr:hover {
+            background-color: var(--dark-light);
+        }
+
+        .review-text {
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .critic-badge {
+            color: var(--critic-color);
+            margin-left: 5px;
+        }
+
+        .score-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .score-high {
+            background-color: rgba(29, 185, 84, 0.2);
+            color: var(--primary);
+        }
+
+        .score-medium {
+            background-color: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+
+        .score-low {
+            background-color: rgba(255, 77, 77, 0.2);
+            color: #ff4d4d;
+        }
+
+        .btn {
+            padding: 5px 10px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .btn-delete {
+            background-color: #ff4d4d;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background-color: #ff1a1a;
+        }
+
+        .no-reviews {
+            text-align: center;
+            padding: 40px;
+            color: var(--gray);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="header">
+            <h1 class="page-title"><i class="fas fa-comments"></i> Управление отзывами</h1>
+            <div class="search-form">
+                <form action="/admin/reviews" method="get"
+                      hx-get="/admin/reviews"
+                      hx-target="#reviews-table-container"
+                      hx-swap="innerHTML"
+                      hx-trigger="submit, input delay:500ms">
+                    <input type="text" name="search" value="{{ search_query }}" class="search-input" placeholder="Поиск по альбому, исполнителю или пользователю...">
+                </form>
+            </div>
+        </div>
+
+        <div id="reviews-table-container">
+            {% include "partials/reviews_table.html" %}
+        </div>
+    </div>
+</body>
+</html>

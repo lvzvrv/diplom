@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админка - Управление альбомами</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+    <style>
+        :root {
+            --primary: #1db954;
+            --dark: #121212;
+            --darker: #000000;
+            --dark-light: #181818;
+            --light: #ffffff;
+            --gray: #b3b3b3;
+            --gray-dark: #535353;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        .search-form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input {
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid var(--gray-dark);
+            background: var(--dark-light);
+            color: var(--light);
+            min-width: 300px;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #1ed760;
+        }
+
+        .albums-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .albums-table th, .albums-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-dark);
+        }
+
+        .albums-table th {
+            background-color: var(--dark-light);
+            color: var(--primary);
+        }
+
+        .albums-table tr:hover {
+            background-color: var(--dark-light);
+        }
+
+        .album-cover {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        .btn-edit {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        .btn-delete {
+            background-color: #ff4d4d;
+            color: white;
+        }
+
+        .no-albums {
+            text-align: center;
+            padding: 40px;
+            color: var(--gray);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="header">
+            <h1 class="page-title"><i class="fas fa-compact-disc"></i> Управление альбомами</h1>
+            <div class="search-form">
+                <form action="/admin/albums" method="get"
+                      hx-get="/admin/albums"
+                      hx-target="#albums-table-container"
+                      hx-swap="innerHTML"
+                      hx-trigger="submit, input delay:500ms">
+                    <input type="text" name="search" value="{{ search_query }}" class="search-input" placeholder="Поиск по названию или исполнителю...">
+                </form>
+                <a href="/admin/albums/new" class="btn btn-primary"><i class="fas fa-plus"></i> Добавить альбом</a>
+            </div>
+        </div>
+
+        <div id="albums-table-container">
+            {% include "partials/albums_table.html" %}
+        </div>
+    </div>
+</body>
+</html>

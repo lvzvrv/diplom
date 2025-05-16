@@ -1,0 +1,51 @@
+<table class="albums-table">
+    <thead>
+        <tr>
+            <th>Обложка</th>
+            <th>Название</th>
+            <th>Исполнитель</th>
+            <th>Дата выхода</th>
+            <th>Жанр</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if albums %}
+            {% for album in albums %}
+            <tr>
+                <td>
+                    {% if album.cover_url %}
+                    <img src="{{ album.cover_url }}" alt="{{ album.album_title }}" class="album-cover">
+                    {% else %}
+                    <div style="width:50px;height:50px;background:#282828;display:flex;align-items:center;justify-content:center;">
+                        <i class="fas fa-music" style="color:#535353;"></i>
+                    </div>
+                    {% endif %}
+                </td>
+                <td>{{ album.album_title }}</td>
+                <td>{{ album.artist_name }}</td>
+                <td>{{ album.release_date.strftime('%d.%m.%Y') }}</td>
+                <td>{{ album.genre or '-' }}</td>
+                <td>
+                    <div class="action-btns">
+                        <a href="/admin/albums/{{ album.id }}/edit" class="btn btn-edit btn-sm"><i class="fas fa-edit"></i></a>
+                        <form action="/admin/albums/{{ album.id }}/delete" method="post" onsubmit="return confirm('Удалить этот альбом?')">
+                            <button type="submit" class="btn btn-delete btn-sm"><i class="fas fa-trash"></i></button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="6" class="no-albums">
+                    <i class="fas fa-compact-disc" style="font-size:40px;margin-bottom:15px;"></i>
+                    <p>Альбомы не найдены</p>
+                    {% if search_query %}
+                    <a href="/admin/albums" style="color:var(--primary);">Сбросить поиск</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
