@@ -3,22 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Админ панель</title>
+    <title>Админка - Управление пользователями</title>
     <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="stylesheet" href="/static/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://unpkg.com/htmx.org@1.9.6"></script>
     <style>
-        /* Исправляем белый текст на белом фоне */
-        .navbar {
-            background-color: #343a40;
-            color: white;
+        :root {
+            --primary: #1db954;
+            --dark: #121212;
+            --darker: #000000;
+            --dark-light: #181818;
+            --light: #ffffff;
+            --gray: #b3b3b3;
+            --gray-dark: #535353;
+            --info: #3b82f6;
         }
 
-        .navbar a {
-            color: white !important;
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
-        /* Стили для таблицы */
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            color: var(--primary);
+        }
+
         .users-table {
             width: 100%;
             border-collapse: collapse;
@@ -26,58 +49,93 @@
         }
 
         .users-table th, .users-table td {
-            padding: 12px;
-            border: 1px solid #dee2e6;
+            padding: 12px 15px;
             text-align: left;
+            border-bottom: 1px solid var(--gray-dark);
         }
 
         .users-table th {
-            background-color: #343a40;
-            color: white;
-            position: sticky;
-            top: 0;
-        }
-
-        .users-table tr:nth-child(even) {
-            background-color: #f8f9fa;
+            background-color: var(--dark-light);
+            color: var(--primary);
         }
 
         .users-table tr:hover {
-            background-color: #e9ecef;
+            background-color: var(--dark-light);
         }
 
         .role-badge {
-            padding: 5px 10px;
+            display: inline-block;
+            padding: 5px 12px;
             border-radius: 15px;
-            font-size: 0.8em;
-            font-weight: bold;
+            font-size: 0.85rem;
+            font-weight: 600;
         }
 
         .role-default {
-            background-color: #e2f0fd;
-            color: #004085;
+            background-color: rgba(59, 130, 246, 0.2);
+            color: var(--info);
         }
 
         .role-critic {
-            background-color: #d4edda;
-            color: #155724;
+            background-color: rgba(29, 185, 84, 0.2);
+            color: var(--primary);
         }
 
         .btn {
             padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
+            border-radius: 20px;
             border: none;
-            font-size: 0.9em;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            transition: all 0.2s;
         }
 
         .btn-toggle {
-            background-color: #6c757d;
+            background-color: var(--info);
             color: white;
         }
 
         .btn-toggle:hover {
-            background-color: #5a6268;
+            background-color: #2a75f1;
+        }
+
+        .no-users {
+            text-align: center;
+            padding: 40px;
+            color: var(--gray);
+        }
+
+        .navbar {
+            background-color: var(--darker);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--gray-dark);
+        }
+
+        .logo {
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary);
         }
     </style>
 </head>
@@ -85,12 +143,15 @@
     <nav class="navbar">
         <a href="/" class="logo">MusicReviews</a>
         <div class="nav-links">
+            <a href="/admin/albums">Альбомы</a>
             <a href="/admin/users" class="active">Пользователи</a>
         </div>
     </nav>
 
-    <div class="container">
-        <h1>Управление пользователями</h1>
+    <div class="admin-container">
+        <div class="header">
+            <h1 class="page-title"><i class="fas fa-users"></i> Управление пользователями</h1>
+        </div>
 
         <table class="users-table">
             <thead>
@@ -110,7 +171,7 @@
                     <td>{{ user.email }}</td>
                     <td>
                         <span class="role-badge {% if user.is_critic %}role-critic{% else %}role-default{% endif %}">
-                            {% if user.is_critic %}Критик{% else %}Обычный{% endif %}
+                            {% if user.is_critic %}Критик{% else %}Пользователь{% endif %}
                         </span>
                     </td>
                     <td>
@@ -121,8 +182,14 @@
                                 hx-headers='{"Content-Type": "application/x-www-form-urlencoded"}'
                                 name="is_critic"
                                 value="{{ not user.is_critic }}">
-                            Сделать {% if user.is_critic %}обычным{% else %}критиком{% endif %}
+                            {% if user.is_critic %}Сделать обычным{% else %}Сделать критиком{% endif %}
                         </button>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="no-users">
+                        <i class="fas fa-user-slash"></i> Пользователи не найдены
                     </td>
                 </tr>
                 {% endfor %}

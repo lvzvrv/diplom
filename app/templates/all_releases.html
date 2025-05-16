@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Reviews - Все релизы</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 40px;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 40px 0 40px;
+            font-size: 36px;
+            color: #ffffff;
+        }
+
+        /* Стили для фильтров */
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .filter-label {
+            color: #b3b3b3;
+            font-size: 14px;
+        }
+
+        .filter-input {
+            padding: 8px 12px;
+            border-radius: 20px;
+            border: 1px solid #282828;
+            background-color: #181818;
+            color: white;
+            width: 60px;
+            text-align: center;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            background-color: #1db954;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover {
+            background-color: #1ed760;
+        }
+
+        .filter-info {
+            text-align: center;
+            color: #b3b3b8;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .albums-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            padding: 10px 0;
+        }
+
+        .album-card {
+            background-color: #181818;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            width: 300px;
+            border: 1px solid #282828;
+            text-decoration: none !important;
+        }
+
+        .album-card:hover {
+            background-color: #282828;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+        }
+
+        .album-cover {
+            width: 100%;
+            border-radius: 6px;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .album-title {
+            font-size: 18px;
+            margin: 10px 0 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .album-artist {
+            color: #b3b3b8;
+            margin-bottom: 12px;
+            font-size: 15px;
+            text-decoration: none;
+        }
+
+        .album-date {
+            color: #b3b3b8;
+            font-size: 13px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+
+        .album-date i {
+            color: #1db954;
+        }
+
+        .album-genre {
+            display: inline-block;
+            background-color: #1db954;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            margin: 12px 0;
+            gap: 8px;
+        }
+
+        .rating-label {
+            color: #b3b3b8;
+            font-size: 13px;
+            min-width: 85px;
+            text-decoration: none;
+        }
+
+        .rating-stars {
+            display: flex;
+            gap: 2px;
+        }
+
+        .star-container {
+            position: relative;
+            width: 16px;
+            height: 16px;
+        }
+
+        .star-filled, .star-half, .star-empty {
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-size: 16px;
+        }
+
+        .star-filled {
+            color: #ffc107;
+            z-index: 2;
+        }
+
+        .star-half {
+            color: #ffc107;
+            z-index: 2;
+            width: 50%;
+            overflow: hidden;
+        }
+
+        .star-empty {
+            color: #535353;
+            z-index: 1;
+        }
+
+        .rating-value {
+            font-weight: bold;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .user-rating .rating-value {
+            color: #1db954;
+        }
+
+        .critic-rating .rating-value {
+            color: #3b82f6;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 40px 0;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .page-link {
+            color: #1db954;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background-color: #181818;
+            transition: all 0.3s;
+            border: 1px solid #282828;
+        }
+
+        .page-link:hover {
+            background-color: #282828;
+        }
+
+        .page-link.disabled {
+            color: #535353;
+            pointer-events: none;
+        }
+
+        .page-info {
+            color: #b3b3b3;
+        }
+
+        .current-page {
+            background-color: #1db954;
+            color: white;
+        }
+
+        .no-results {
+            text-align: center;
+            color: #b3b3b3;
+            font-size: 18px;
+            margin: 50px 0;
+            padding: 30px;
+            background-color: #181818;
+            border-radius: 10px;
+            width: 100%;
+        }
+
+        .no-results i {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: #1db954;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            h1 {
+                font-size: 26px;
+                margin: 30px 0;
+            }
+
+            .albums-container {
+                gap: 15px;
+            }
+
+            .album-card {
+                width: 100%;
+                max-width: 320px;
+                padding: 15px;
+            }
+
+            .filter-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .filter-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include "navbar.html" %}
+
+    <div class="container">
+        <h1>Все релизы</h1>
+
+        <div class="filter-container">
+            <form method="get" class="filter-form">
+                <span class="filter-label">Год от:</span>
+                <input type="number"
+                       name="year_from"
+                       class="filter-input"
+                       min="1900"
+                       max="{{ current_year }}"
+                       value="{{ filters.year_from }}">
+            </form>
+
+            <form method="get" class="filter-form">
+                <span class="filter-label">Год до:</span>
+                <input type="number"
+                       name="year_to"
+                       class="filter-input"
+                       min="1900"
+                       max="{{ current_year }}"
+                       value="{{ filters.year_to }}">
+            </form>
+
+            <form method="get" class="filter-form">
+                <span class="filter-label">Пользователи ≥</span>
+                <input type="number"
+                       name="min_user_score"
+                       class="filter-input"
+                       min="0"
+                       max="100"
+                       value="{{ filters.min_user_score }}">
+            </form>
+
+            <form method="get" class="filter-form">
+                <span class="filter-label">Критики ≥</span>
+                <input type="number"
+                       name="min_critic_score"
+                       class="filter-input"
+                       min="0"
+                       max="100"
+                       value="{{ filters.min_critic_score }}">
+            </form>
+
+            <button type="submit" class="filter-btn" onclick="applyFilters()">
+                <i class="fas fa-filter"></i> Применить
+            </button>
+        </div>
+
+        <div class="filter-info">
+            {% if filters.min_user_score > 0 or filters.min_critic_score > 0 or filters.year_from > 1900 or filters.year_to < current_year %}
+                Фильтры:
+                {% if filters.min_user_score > 0 %}Пользователи ≥ {{ filters.min_user_score }}%{% endif %}
+                {% if filters.min_critic_score > 0 %}{% if filters.min_user_score > 0 %} и {% endif %}Критики ≥ {{ filters.min_critic_score }}%{% endif %}
+                {% if filters.year_from > 1900 or filters.year_to < current_year %}
+                    {% if filters.min_user_score > 0 or filters.min_critic_score > 0 %}, {% endif %}
+                    {{ filters.year_from }}–{{ filters.year_to }}
+                {% endif %}
+            {% else %}
+                Все альбомы
+            {% endif %}
+            (найдено: {{ total_albums }})
+        </div>
+
+        <div class="albums-container">
+            {% if albums %}
+                {% for album in albums %}
+                <a href="/albums/{{ album.id }}" class="album-card">
+                    <img src="{{ album.cover_url or 'https://via.placeholder.com/300' }}"
+                         alt="{{ album.album_title }}"
+                         class="album-cover">
+                    <div class="album-content">
+                        <h3 class="album-title">{{ album.album_title }}</h3>
+                        <p class="album-artist">{{ album.artist_name }}</p>
+
+                        <div class="album-meta">
+                            <p class="album-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                {{ album.release_date.strftime('%d.%m.%Y') }}
+                            </p>
+
+                            <div class="rating user-rating">
+                                <span class="rating-label">Пользователи:</span>
+                                <div class="rating-stars">
+                                    {% set user_rating = album.user_score / 20 %}
+                                    {% for i in range(5) %}
+                                        <div class="star-container">
+                                            <i class="far fa-star star-empty"></i>
+                                            {% if user_rating >= i + 1 %}
+                                                <i class="fas fa-star star-filled"></i>
+                                            {% elif user_rating >= i + 0.5 %}
+                                                <i class="fas fa-star-half-alt star-half"></i>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <span class="rating-value">{{ "%.1f"|format(album.user_score) }}</span>
+                            </div>
+
+                            <div class="rating critic-rating">
+                                <span class="rating-label">Критики:</span>
+                                <div class="rating-stars">
+                                    {% set critic_rating = album.critic_score / 20 %}
+                                    {% for i in range(5) %}
+                                        <div class="star-container">
+                                            <i class="far fa-star star-empty"></i>
+                                            {% if critic_rating >= i + 1 %}
+                                                <i class="fas fa-star star-filled"></i>
+                                            {% elif critic_rating >= i + 0.5 %}
+                                                <i class="fas fa-star-half-alt star-half"></i>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <span class="rating-value">{{ "%.1f"|format(album.critic_score) }}</span>
+                            </div>
+
+                            <span class="album-genre">{{ album.genre or 'Разное' }}</span>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            {% else %}
+                <div class="no-results">
+                    <i class="fas fa-music"></i>
+                    <p>Альбомы не найдены</p>
+                    {% if filters.min_user_score > 0 or filters.min_critic_score > 0 or filters.year_from > 1900 or filters.year_to < current_year %}
+                        <p>Попробуйте изменить параметры фильтрации</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        {% if total_albums > per_page %}
+        <div class="pagination">
+            <a href="{{ update_query_param('page', 1) }}"
+               class="page-link {% if page == 1 %}disabled{% endif %}" title="Первая страница">
+                <i class="fas fa-angle-double-left"></i>
+            </a>
+            <a href="{{ update_query_param('page', page-1) }}"
+               class="page-link {% if page == 1 %}disabled{% endif %}" title="Предыдущая страница">
+                <i class="fas fa-angle-left"></i>
+            </a>
+
+            {% if page > 3 %}
+                <span class="page-info">...</span>
+            {% endif %}
+
+            {% for p in range(max(1, page-2), min(page+3, total_pages+1)) %}
+                <a href="{{ update_query_param('page', p) }}"
+                   class="page-link {% if p == page %}current-page{% endif %}">
+                    {{ p }}
+                </a>
+            {% endfor %}
+
+            {% if page < total_pages-2 %}
+                <span class="page-info">...</span>
+            {% endif %}
+
+            <a href="{{ update_query_param('page', page+1) }}"
+               class="page-link {% if page == total_pages %}disabled{% endif %}" title="Следующая страница">
+                <i class="fas fa-angle-right"></i>
+            </a>
+            <a href="{{ update_query_param('page', total_pages) }}"
+               class="page-link {% if page == total_pages %}disabled{% endif %}" title="Последняя страница">
+                <i class="fas fa-angle-double-right"></i>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function applyFilters() {
+            const userScore = document.querySelector('input[name="min_user_score"]').value;
+            const criticScore = document.querySelector('input[name="min_critic_score"]').value;
+            const yearFrom = document.querySelector('input[name="year_from"]').value;
+            const yearTo = document.querySelector('input[name="year_to"]').value;
+
+            const params = new URLSearchParams();
+            if (userScore > 0) params.set('min_user_score', userScore);
+            if (criticScore > 0) params.set('min_critic_score', criticScore);
+            if (yearFrom > 1900) params.set('year_from', yearFrom);
+            if (yearTo < new Date().getFullYear()) params.set('year_to', yearTo);
+
+            window.location.href = `/all-releases?${params.toString()}`;
+        }
+
+        // Обработка нажатия Enter в полях ввода
+        document.querySelectorAll('.filter-input').forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    applyFilters();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -16,24 +16,40 @@ load_dotenv()
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
 
+
 @router.get("/", response_class=HTMLResponse)
 async def read_albums(
-    request: Request,
-    db: Session = Depends(get_db)
+        request: Request,
+        filter_by: str = "user",  # 'user' или 'critic'
+        db: Session = Depends(get_db)
 ):
-    # Получаем список альбомов
-    albums = db.query(Album).order_by(Album.release_date.desc()).all()
+    # Базовый запрос без фильтрации
+    query = db.query(Album)
 
-    # Проверяем авторизацию через JWT
+    # Применяем фильтрацию в зависимости от выбора
+    if filter_by == "user":
+        query = query.filter(Album.user_score > 60).order_by(Album.user_score.desc())
+    elif filter_by == "critic":
+        query = query.filter(Album.critic_score > 60).order_by(Album.critic_score.desc())
+    else:
+        query = query.order_by(Album.release_date.desc())  # Стандартная сортировка
+
+    albums = query.all()
+
+    # Проверка авторизации (остается без изменений)
     current_user = None
     if request.cookies.get("access_token"):
         try:
             current_user = await get_current_user(request, db)
         except:
-            # Если токен невалидный, удаляем его
             response = templates.TemplateResponse(
                 "index.html",
-                {"request": request, "albums": albums, "current_user": None}
+                {
+                    "request": request,
+                    "albums": albums,
+                    "current_user": None,
+                    "active_filter": filter_by
+                }
             )
             response.delete_cookie("access_token")
             return response
@@ -43,7 +59,8 @@ async def read_albums(
         {
             "request": request,
             "albums": albums,
-            "current_user": current_user  # Используем единое именование
+            "current_user": current_user,
+            "active_filter": filter_by
         }
     )
 

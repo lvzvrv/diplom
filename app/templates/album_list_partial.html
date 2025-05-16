@@ -1,0 +1,61 @@
+<div class="albums-container">
+    {% if albums %}
+        {% for album in albums %}
+        <a href="/albums/{{ album.id }}" class="album-card">
+            <img src="{{ album.cover_url or 'https://via.placeholder.com/300' }}"
+                 alt="{{ album.album_title }}"
+                 class="album-cover">
+            <div class="album-content">
+                <h3 class="album-title">{{ album.album_title }}</h3>
+                <p class="album-artist">{{ album.artist_name }}</p>
+
+                <div class="album-meta">
+                    <p class="album-date">
+                        <i class="fas fa-calendar-alt"></i>
+                        {{ album.release_date.strftime('%d.%m.%Y') }}
+                    </p>
+
+                    <div class="rating user-rating">
+                        <span class="rating-label">Пользователи:</span>
+                        <div class="rating-stars">
+                            {% set user_rating = album.user_score / 20 %}
+                            {% for i in range(5) %}
+                                {% if user_rating >= i + 1 %}
+                                    <i class="fas fa-star star-filled"></i>
+                                {% elif user_rating >= i + 0.5 %}
+                                    <i class="fas fa-star-half-alt star-half"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <span class="rating-value">{{ "%.1f"|format(album.user_score) }}</span>
+                    </div>
+
+                    <div class="rating critic-rating">
+                        <span class="rating-label">Критики:</span>
+                        <div class="rating-stars">
+                            {% set critic_rating = album.critic_score / 20 %}
+                            {% for i in range(5) %}
+                                {% if critic_rating >= i + 1 %}
+                                    <i class="fas fa-star star-filled"></i>
+                                {% elif critic_rating >= i + 0.5 %}
+                                    <i class="fas fa-star-half-alt star-half"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <span class="rating-value">{{ "%.1f"|format(album.critic_score) }}</span>
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    {% else %}
+        <div class="no-results">
+            <i class="fas fa-music" style="font-size: 40px; margin-bottom: 15px;"></i>
+            <p>Альбомы в жанре "{{ genre }}" не найдены</p>
+        </div>
+    {% endif %}
+</div>

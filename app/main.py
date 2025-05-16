@@ -4,7 +4,7 @@ from itsdangerous import URLSafeTimedSerializer
 from pydantic_settings import BaseSettings
 from starlette.middleware.sessions import SessionMiddleware
 
-from app.routers import users, root, albums, admin, profile
+from app.routers import users, root, albums, admin, profile, new_releases, genres, all_releases
 from app.database import engine
 from app.models import Base  # Импортируем Base из models
 from app.utils import STATIC_DIR
@@ -55,6 +55,9 @@ app.include_router(root.router, tags=["Root"])
 app.include_router(albums.router, tags=["Albums"])
 app.include_router(admin.router, tags=["Admin"])
 app.include_router(profile.router, tags=["Profile"])
+app.include_router(new_releases.router, tags=["New-releases"])
+app.include_router(genres.router, tags=["New-releases"])
+app.include_router(all_releases.router, tags=["All-releases"])
 
 if __name__ == "__main__":
     import uvicorn
